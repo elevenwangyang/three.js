@@ -52,11 +52,22 @@
     }
 
     var light;
-
+    //可混合搭配使用
     function initLight() {
-    	light = new THREE.AmbientLight(0xFF0000);
-    	light.position.set(100,100,200);
-    	scene.add(light);
+        //环境光
+        // light = new THREE.AmbientLight(0x00FF00);//绿色
+        // light.position.set(100, 100, 200);
+        // scene.add(light);
+
+        //平行光(光色 光源强度[默认为1可省略])
+        light = new THREE.DirectionalLight(0xFF0000,1);//红色
+        light.position.set(0,0,1);
+        scene.add(light);
+
+        //点光源(光色 光源强度[最亮为1] 光线强度)
+        light = new THREE.PointLight(0x00FF00,1,400,1);
+        light.position.set(0,0,0);
+        scene.add(light);
     }
 
     var cube;
@@ -67,8 +78,28 @@
             color: 0xFFFFFF
         });
         var mesh = new THREE.Mesh(geometry, material);
-        mesh.position = new THREE.Vector3(0, 0, 0);
+        mesh.position.set(0, 0, 0);
         scene.add(mesh);
+
+        var mesh2 = new THREE.Mesh(geometry, material);
+        mesh2.position.set(-300, 0, 0);
+        scene.add(mesh2);
+
+        var mesh3 = new THREE.Mesh(geometry, material);
+        mesh3.position.set(0, -150, 0);
+        scene.add(mesh3);
+
+        var mesh4 = new THREE.Mesh(geometry, material);
+        mesh4.position.set(0, 150, 0);
+        scene.add(mesh4);
+
+        var mesh5 = new THREE.Mesh(geometry, material);
+        mesh5.position.set(300, 0, 0);
+        scene.add(mesh5);
+
+        var mesh6 = new THREE.Mesh(geometry, material);
+        mesh6.position.set(0, 0, -100);
+        scene.add(mesh6);
     }
 
     function threeStart() {
