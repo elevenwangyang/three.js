@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Three框架</title>
+    <script src='js/three.js'></script>
+    <script src='js/Stats.js'></script>
+    <script src='js/tween.min.js'></script>
+    <style>
+    div#canvas {
+        cursor: pointer;
+        width: 100%;
+        height: 600px;
+        background: #eee;
+    }
+    </style>
+    <script>
+    var renderer;
+    var stats;
+    //初始化渲染器
+    function initThree() {
+        //获取画布的宽高
+        width = document.getElementById('canvas').clientWidth;
+        height = document.getElementById('canvas').clientHeight;
+        //声明渲染器
+        renderer = new THREE.WebGLRenderer({
+            antialias: true
+        });
+        //设置渲染器的宽高
+        renderer.setSize(width, height);
+        //将渲染器添加到页面中
+        document.getElementById('canvas').appendChild(renderer.domElement);
+        //设置渲染器背景色
+        renderer.setClearColor(0xFFFFFF, 1.0);
+
+        //声明一个监视器
+        stats = new Stats();
+        //设置监视器位置(左上角)
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        //添加监视器到页面中
+        document.getElementById('canvas').appendChild(stats.domElement);
+    }
+    //初始化相机
+    var camera
+
+    function initCamera() {
+        //设置相机为透视投影(45度视角 纵横比 近平面 远平面)
+        camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+        //设置相机的位置x y z
+        camera.position.x = 0;
+        camera.position.y = 0;
+        camera.position.z = 600;
+        //设置相机的上为y轴方向
+        camera.up.x = 0;
+        camera.up.y = 1;
+        camera.up.z = 0;
+        //设置视野的重心坐标
+        camera.lookAt({
+            x: 0,
+            y: 0,
+            z: 0
+        });
+    }
+    //初始化场景
+    var scene;
+
+    function initScene() {
+        scene = new THREE.Scene();
+    }
+    //设置光线
+    var light;
+
+    function initLight() {
+        light = new THREE.AmbientLight(0xFF0000);
+        light.position.set(100, 100, 200);
+        scene.add(light);
+
+        light = new THREE.PointLight(0x00FF00);
+        light.position.set(0, 0, 300);
+        scene.add(light);
+    }
+    //初始化一个对象
+    var object;
+
+    function initObject() {
+        //创建一个柱体(柱体顶部半径 柱体底部半径 柱体高度)
+        var geometry = new THREE.CylinderGeometry(100, 150, 400);
+        var material = new THREE.MeshLambertMaterial({
+            color: 0xFFFFFF
+        });
+        object = new THREE.Mesh(geometry, material);
+        object.position = new THREE.Vector3(0, 0, 0);
+        //添加到场景中
+        scene.add(object);
+    }
+    //执行
+    function threeStart() {
+        initThree();
+        initCamera();
+        initScene();
+        initLight();
+        initObject();
+        initTween();
+        animation();
+    }
+    //动画
+    function initTween() {
+        new TWEEN.Tween(object.position).to({
+            x: -400
+        }, 3000).repeat(Infinity).start();
+    }
+    //移动
+    function animation() {
+        renderer.render(scene, camera);
+        requestAnimationFrame(animation);
+
+        stats.update();
+        TWEEN.update();
+    }
+    </script>
+</head>
+
+<body onload='threeStart();'>
+    <div id="canvas"></div>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>立方体</title>
+    <script src="js/three.js"></script>
+    <style>
+    #three_canvas {
+        width: 100%;
+        height: 100%;
+        cursor: move;
+    }
+    </style>
+</head>
+
+<body>
+    <canvas id="three_canvas"></canvas>
+    <script>
+    var renderer, camera, scene, light, object;
+    var width, height;
+    //初始化渲染器
+    function initRenderer() {
+        //获取画布的宽高
+        width = document.getElementById('three_canvas').clientWidth;
+        height = document.getElementById('three_canvas').clientHeight;
+        //声明渲染器
+        renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('three_canvas')
+        });
+        //设置渲染器的宽高
+        renderer.setSize(width, height);
+        //设置渲染器背景色
+        renderer.setClearColor(0xFFFFFF, 1.0);
+    }
+
+    //初始化相机
+    function initCamera() {
+        //简单的正交投影相机，正对着视口的中心，视口大小与Canvas大小相同。
+        camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, 1000);
+        //设置相机的位置x y z
+        camera.position.x = 0;
+        camera.position.y = 0;
+        camera.position.z = 200;
+        //设置相机的上为y轴方向
+        camera.up.x = 0;
+        camera.up.y = 1;
+        camera.up.z = 0;
+        //设置视野的重心坐标
+        camera.lookAt({
+            x: 0,
+            y: 0,
+            z: 0
+        });
+    }
+    //初始化场景
+    function initScene() {
+        scene = new THREE.Scene();
+    }
+    //初始化一个对象
+    function initObject() {
+        //创建一个几何体(长,宽,高)
+        var geometry = new THREE.CubeGeometry(100, 100, 100);
+        object = new THREE.Mesh(geometry, new THREE.MeshNormalMaterial());
+        //添加到场景中
+        scene.add(object);
+    }
+    //旋转
+    function render() {
+        //调用函数render
+        requestAnimationFrame(render);
+        //将物体绕X轴旋转0.05 绕Y轴旋转0.05
+        object.rotation.x += 0.05;
+        object.rotation.y += 0.05;
+        renderer.render(scene, camera);
+    }
+    //执行
+    function threeStart() {
+        initRenderer();
+        initCamera();
+        initScene();
+        initObject();
+        render();
+    }
+    window.onload = threeStart();
+    </script>
+</body>
+
+</html>
